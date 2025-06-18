@@ -56,13 +56,40 @@ class Tree
     puts "#{prefix}#{is_left ? '└── ' : '┌── '}#{node.value}"
     pretty_print(node.left_children, "#{prefix}#{is_left ? '    ' : '│   '}", true) if node.left_children
   end
+
+  def insert(value)
+    node = Node.new(value)
+    current_node = @root
+    #travel until we find the leaf node
+    until current_node.left_children == nil && current_node.right_children == nil 
+      #when the value is less or EQUAL to current node's value
+      if value <= current_node.value 
+        current_node = current_node.left_children
+      else
+        current_node = current_node.right_children
+      end
+    end
+    
+    if value < current_node.value
+      current_node.left_children = node
+    else
+      current_node.right_children = node
+    end
+  end
   
- 
 end
 
 a= [1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324]
 c = [1,2,3,4,5,6,7]
-b = Tree.new(a)
+b = Tree.new(c)
+
+b.pretty_print
+b.insert(8)
+b.insert(13)
+b.insert(3)
+b.insert(1)
+b.insert(2)
+b.insert(2)
 
 b.pretty_print
 # puts b.root
