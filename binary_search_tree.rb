@@ -57,24 +57,38 @@ class Tree
   end
   #refacter this
   def insert(value)
-    node = Node.new(value)
-    current_node = @root
-    #travel until we find the leaf node
-    until current_node.left_children == nil && current_node.right_children == nil 
-      #when the value is less or EQUAL to current node's value move left
-      if value <= current_node.value 
-        current_node = current_node.left_children
-      else
-        current_node = current_node.right_children
-      end
-    end
 
-    #deciding on which side new node gonna be
-    if value < current_node.value
-      current_node.left_children = node
+    root_node = @root
+    insert_value_to_tree(root_node, value)
+    # node = Node.new(value)
+    # current_node = @root
+    # #travel until we find the leaf node
+    # until (current_node.left_children == nil && current_node.right_children == nil ) || current_node.right_children.value > value && current_node
+    #   #when the value is less or EQUAL to current node's value move left
+    #   if value <= current_node.value 
+    #     current_node = current_node.left_children
+    #   else
+    #     current_node = current_node.right_children
+    #   end
+    # end
+
+    # #deciding on which side new node gonna be
+    # if value < current_node.value 
+    #   current_node.left_children = node
+    # else
+    #   current_node.right_children = node
+    # end
+  end
+
+  def insert_value_to_tree(root, value)
+    return Node.new(value) if root.nil?
+    return root if root.value == value 
+    if root.value < value
+      root.right_children = insert_value_to_tree(root.right_children, value)
     else
-      current_node.right_children = node
+      root.left_children = insert_value_to_tree(root.left_children, value)
     end
+    return root 
   end
 
   def delete(value)
@@ -179,25 +193,30 @@ end
 
 
 #test
-#
+
 a= [1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324]
 c = [1,2,3,4,5,6,7]
-b = Tree.new(c)
+b = Tree.new((Array.new(15) { rand(1..100) }))
 
 b.pretty_print
 # b.insert(15)
 # b.insert(432432)
 # b.insert(534)
 # b.insert(645)
-# b.pretty_print
 # b.insert(423)
 # b.insert(123)
+# puts "\n \n \n "
+
+# b.pretty_print
+
+
 # b.delete(1)
 # b.delete(7)
 # b.insert(8)
-b.delete(4)
-puts "\n \n \n "
-b.pretty_print
+#-----------------
+# b.delete(4)
+# puts "\n \n \n "
+# b.pretty_print
 # puts "\n \n \n "
 # b.delete(6)
 # b.pretty_print
