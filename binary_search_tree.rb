@@ -42,10 +42,11 @@ class Tree
     mid_index = (start_index + end_index) /2
     node = Node.new(array[mid_index])
 
-
+    #basically dont include mid value 
     node.left_children = build_tree(array,start_index, mid_index -1)
     node.right_children = build_tree(array, mid_index + 1, end_index)
-    #return the node
+    #return the node, this will return the 
+    #tree's header when recursion ends
     node
   end
 
@@ -81,21 +82,36 @@ class Tree
   end
 
   def insert_value_to_tree(root, value)
+    #base case return a new node when recursion reaches 
+    #the leaf node
     return Node.new(value) if root.nil?
-    return root if root.value == value 
+    #stop the recursion if the node with 
+    #the value we want to add already exist
+    return root if root.value == value
+
+    #travel right if the new node's value is
+    #bigger than current node's value 
     if root.value < value
+      #this works because eventually the method 
+      #will return a new node or node that it already exist 
+      #which means it doesnt add a new node
       root.right_children = insert_value_to_tree(root.right_children, value)
+    #travel left otherwise 
     else
       root.left_children = insert_value_to_tree(root.left_children, value)
     end
+    #return the new added node
     return root 
   end
 
   def delete(value)
-    
+    #first check if the node we want to delete exist
     node_to_delete = find_the_node(value)
+    
     if !node_to_delete
       puts "Couldn't find the node to delte"  
+    #call different method depends on the number of
+    #children the node we want to delete has. 
     elsif number_of_children(node_to_delete) == 0
       delete_node_with_no_children(node_to_delete)
     elsif number_of_children(node_to_delete) == 1
@@ -115,7 +131,8 @@ class Tree
       elsif value > node_to_find.value
         node_to_find = node_to_find.right_children
       else
-        # puts "Couldn't find the node to delte"  
+        # nil if node with the value we looking for
+        #doesn't exist  
         return nil
       end
     end
@@ -134,6 +151,7 @@ class Tree
   end
 
   def delete_node_with_no_children(node_to_delete)
+    #find the parent node 
     parent_node_of_node_to_delete = find_the_parent_node(node_to_delete.value)
     if parent_node_of_node_to_delete.left_children&.value == node_to_delete.value
       parent_node_of_node_to_delete.left_children = nil
@@ -188,7 +206,98 @@ class Tree
     end
     parent_node
   end
-  
+
+  def level_order_iteration
+    #much better than the first one 
+    nodes = [@root]
+    values = []
+    until nodes.empty?
+      current_node = nodes.shift
+      values << current_node.value
+      nodes << current_node.left_children if current_node.left_children
+      nodes << current_node.right_children if current_node.right_children 
+    end
+    if block_given?
+      values.each { |node| yield node}
+    else
+      values
+
+    end
+
+    
+      
+    # end
+    #-----first try/ eat works but i think i can do better
+    # nodes = [@root]
+    # child_nodes = []
+    # values = []
+    # until nodes.empty?
+    #   #add all the child nodes from nodes array to child nodes 
+    #   nodes.each do |node|
+    #     child_nodes << node.left_children if node.left_children
+    #     child_nodes << node.right_children if node.right_children
+    #   end
+    #   #add values of nodes in nodes array to values 
+    #   nodes.size.times { values << nodes.shift.value}
+    #   nodes = child_nodes
+    #   child_nodes = []
+    # end
+
+    # values
+  end
+  # [4, 2, 6, 1, 3, 5, 7]
+  # #use flat_map 
+  def level_order_recursion(nodes =[@root], values=[])
+    #base case when nodes array is empty
+    return nil if nodes.empty?
+
+    current_node = nodes.shift
+    values << current_node.value 
+    
+    nodes << current_node.left_children if current_node.left_children
+    nodes << current_node.right_children if current_node.right_children
+    
+    level_order_recursion(nodes,values)
+    
+
+    if block_given? 
+      values.each {|value| yield value}
+    else
+      values
+    end
+    
+
+    # return nil if node.nil?
+    
+    # array << node.value if node == @root
+
+    # array << node.left_children.value if node.left_children
+    # array << node.right_children.value if node.right_children
+
+
+    # level_order_recursion(node.left_children, array) if node.left_children
+    # level_order_recursion(node.right_children, array) if node.right_children
+
+    # return array
+  end
+
+  #--inorder,preorder,  postorder
+  # def inorder(node = @root ,array = [])
+  #   return nil if node.nil?
+    
+  #   array << node.value 
+  #   inorder(node.left_children, array) if node.left_children
+  #   inorder(node.right_children, array) if node.right_children
+
+  #   if block_given?
+  #     array.each { |value| yield value}
+  #   else
+  #     return array
+  #   end
+
+  # end
+
+
 end
 
 
@@ -196,9 +305,16 @@ end
 
 a= [1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324]
 c = [1,2,3,4,5,6,7]
-b = Tree.new((Array.new(15) { rand(1..100) }))
+random_array  = (Array.new(15) { rand(1..100) })
+d = [1,2,3,4,5]
+simple_test = [1,2,3]
+b = Tree.new(random_array)
 
 b.pretty_print
+# p b.level_order_iteration 
+# p b.level_order_recursion 
+# p b.inorder
+# b.level_order_recursion { |value| puts value}
 # b.insert(15)
 # b.insert(432432)
 # b.insert(534)
