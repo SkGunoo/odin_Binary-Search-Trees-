@@ -173,25 +173,25 @@ class Tree
   end
 
   def delete_node_with_both_children(node_to_delete)
-    inorder_successor = find_inorder_successor(node_to_delete)
-    #store the value of inorder successor before we delete the node 
-    value_of_inorder_successor = inorder_successor.value
-    #delete the inorder successor 
-    self.delete(value_of_inorder_successor)
-    #assign the value from inorder successor 
-    node_to_delete.value = value_of_inorder_successor
+    preorder_successor = find_preorder_successor(node_to_delete)
+    #store the value of preorder successor before we delete the node 
+    value_of_preorder_successor = preorder_successor.value
+    #delete the preorder successor 
+    self.delete(value_of_preorder_successor)
+    #assign the value from preorder successor 
+    node_to_delete.value = value_of_preorder_successor
     
   end
 
-  def find_inorder_successor(node)
+  def find_preorder_successor(node)
     #go right once and travel left until we can't
-  inorder_successor = node.right_children
+  preorder_successor = node.right_children
 
-  until inorder_successor.left_children == nil
-    inorder_successor = inorder_successor.left_children
+  until preorder_successor.left_children == nil
+    preorder_successor = preorder_successor.left_children
   end
 
-  inorder_successor
+  preorder_successor
   end
 
   #find that node that has the node with the value as children
@@ -281,21 +281,48 @@ class Tree
     # return array
   end
 
-  #--inorder,preorder,  postorder
-  # def inorder(node = @root ,array = [])
-  #   return nil if node.nil?
+  #--preorder,inorder,  postorder
+  def preorder(node = @root ,array = [])
+    return nil if node.nil?
     
-  #   array << node.value 
-  #   inorder(node.left_children, array) if node.left_children
-  #   inorder(node.right_children, array) if node.right_children
+    array << node.value 
+    preorder(node.left_children, array) if node.left_children
+    preorder(node.right_children, array) if node.right_children
 
-  #   if block_given?
-  #     array.each { |value| yield value}
-  #   else
-  #     return array
-  #   end
+    if block_given?
+      array.each { |value| yield value}
+    else
+      return array
+    end
+  end
 
-  # end
+  def inorder(node = @root ,array = [])
+    return nil if node.nil?
+    
+    inorder(node.left_children, array) if node.left_children
+    array << node.value 
+    inorder(node.right_children, array) if node.right_children
+
+    if block_given?
+      array.each { |value| yield value}
+    else
+      return array
+    end
+  end
+
+  def postorder(node = @root ,array = [])
+    return nil if node.nil?
+    
+    postorder(node.left_children, array) if node.left_children
+    postorder(node.right_children, array) if node.right_children
+    array << node.value 
+
+    if block_given?
+      array.each { |value| yield value}
+    else
+      return array
+    end
+  end
 
 
 end
@@ -308,12 +335,14 @@ c = [1,2,3,4,5,6,7]
 random_array  = (Array.new(15) { rand(1..100) })
 d = [1,2,3,4,5]
 simple_test = [1,2,3]
-b = Tree.new(random_array)
+b = Tree.new(c)
 
 b.pretty_print
 # p b.level_order_iteration 
 # p b.level_order_recursion 
-# p b.inorder
+p b.preorder
+p b.inorder
+p b.postorder
 # b.level_order_recursion { |value| puts value}
 # b.insert(15)
 # b.insert(432432)
