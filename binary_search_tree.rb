@@ -387,7 +387,14 @@ class Tree
     
     result
   end
+
+  def rebalance 
+    new_array = self.preorder 
+
+    @root = build_tree(new_array, 0, (new_array.size) - 1)
+  end
 end
+
 
 
 #test
@@ -397,54 +404,26 @@ c = [1,2,3,4,5,6,7]
 random_array  = (Array.new(15) { rand(1..100) })
 d = [1,2,3,4,5]
 simple_test = [1,2,3]
-b = Tree.new(c)
+b = Tree.new(random_array)
 
-b.insert(432432)
-# b.insert(32132)
-# b.insert(1.5)
-# b.insert(32423423)
-# b.insert(324234232)
 
-# b.insert(4324322)
-# b.insert(43243223)
-
+#----final test sequence
 b.pretty_print
-# p b.balance_check()
 p b.balanced?
-# p b.height(4)
-# p b.depth(432432)
-# p b.level_order_iteration 
-# p b.level_order_recursion 
-# 
-# p b.preorder
-# p b.inorder
-# p b.postorder
+p b.preorder
+p b.inorder
+p b.postorder
+b.insert(130)
+b.insert(234)
+b.insert(121)
+b.pretty_print
 
+p b.balanced?
+b.rebalance
+b.pretty_print
 
-# b.level_order_recursion { |value| puts value}
-# b.insert(15)
-# b.insert(534)
-# b.insert(645)
-# b.insert(423)
-# b.insert(123)
-# puts "\n \n \n "
-
-# b.pretty_print
-
-
-# b.delete(1)
-# b.delete(7)
-# b.insert(8)
-#-----------------
-# b.delete(4)
-# puts "\n \n \n "
-# b.pretty_print
-# puts "\n \n \n "
-# b.delete(6)
-# b.pretty_print
-
-# b.pretty_print
-# puts b.root
-# puts b.root.left_children
-# puts b.root.right_children
+p b.balanced?
+p b.preorder
+p b.inorder
+p b.postorder
 
