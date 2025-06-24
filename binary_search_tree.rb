@@ -324,6 +324,27 @@ class Tree
     end
   end
 
+  def height(value)
+    #check if node with value we  exist
+    node_to_find = find_the_node(value)
+    if node_to_find
+      find_the_height(node_to_find)
+    else
+      return nil 
+    end
+  end
+
+  def find_the_height(node)
+    return 0 if node.nil?
+
+    left_height = find_the_height(node.left_children)
+    right_height = find_the_height(node.right_children)
+
+    1 + [left_height,right_height].max
+
+    
+  end
+
 
 end
 
@@ -335,17 +356,23 @@ c = [1,2,3,4,5,6,7]
 random_array  = (Array.new(15) { rand(1..100) })
 d = [1,2,3,4,5]
 simple_test = [1,2,3]
-b = Tree.new(c)
+b = Tree.new(simple_test)
+
+b.insert(432432)
+# b.insert(4324322)
+# b.insert(43243223)
 
 b.pretty_print
 # p b.level_order_iteration 
 # p b.level_order_recursion 
-p b.preorder
-p b.inorder
-p b.postorder
+# 
+# p b.preorder
+# p b.inorder
+# p b.postorder
+
+p b.height(3)
 # b.level_order_recursion { |value| puts value}
 # b.insert(15)
-# b.insert(432432)
 # b.insert(534)
 # b.insert(645)
 # b.insert(423)
