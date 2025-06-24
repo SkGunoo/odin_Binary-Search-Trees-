@@ -356,15 +356,37 @@ class Tree
   end
 
   def find_the_depth(node)
-    return 0 if node == @root
-    
+    return 0 if node == @root 
+
     parent_node = find_the_parent_node(node.value)
     depth_travel = find_the_depth(parent_node)
 
     1 + depth_travel
   end
 
+  def balanced?(node = @root, balance = true)
+    return if node.nil?
 
+    balance = false if !balance_check(node)
+
+    balanced?(node.left_children, balance) if node.left_children
+    balanced?(node.right_children, balance) if node.left_children
+
+    balance
+    
+    
+  end
+
+  def balance_check(node = @root)
+    # +1 because need to add one edge from these node to its parent 
+    left_depth = find_the_height(node.left_children) + 1
+    right_depth = find_the_height(node.right_children) + 1
+    result = (left_depth - right_depth).abs > 1 ? false : true 
+    
+    # puts "left depth = #{left_depth}, right_depth = #{right_depth}"
+    
+    result
+  end
 end
 
 
@@ -378,11 +400,19 @@ simple_test = [1,2,3]
 b = Tree.new(c)
 
 b.insert(432432)
+# b.insert(32132)
+# b.insert(1.5)
+# b.insert(32423423)
+# b.insert(324234232)
+
 # b.insert(4324322)
 # b.insert(43243223)
 
 b.pretty_print
-p b.depth(432432)
+# p b.balance_check()
+p b.balanced?
+# p b.height(4)
+# p b.depth(432432)
 # p b.level_order_iteration 
 # p b.level_order_recursion 
 # 
@@ -390,7 +420,6 @@ p b.depth(432432)
 # p b.inorder
 # p b.postorder
 
-# p b.height(3)
 
 # b.level_order_recursion { |value| puts value}
 # b.insert(15)
