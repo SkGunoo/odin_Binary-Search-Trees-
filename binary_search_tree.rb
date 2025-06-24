@@ -197,6 +197,7 @@ class Tree
   #find that node that has the node with the value as children
   def find_the_parent_node(value)
     parent_node = @root
+    # return @root if @root.value == value
     until parent_node.left_children&.value == value || parent_node.right_children&.value == value
       if value < parent_node.value
         parent_node = parent_node.left_children
@@ -335,7 +336,7 @@ class Tree
   end
 
   def find_the_height(node)
-    return 0 if node.nil?
+    return -1  if node.nil?
 
     left_height = find_the_height(node.left_children)
     right_height = find_the_height(node.right_children)
@@ -343,6 +344,24 @@ class Tree
     1 + [left_height,right_height].max
 
     
+  end
+
+  def depth(value)
+    node_to_find = find_the_node(value)
+    if node_to_find
+      find_the_depth(node_to_find)
+    else
+      nil
+    end    
+  end
+
+  def find_the_depth(node)
+    return 0 if node == @root
+    
+    parent_node = find_the_parent_node(node.value)
+    depth_travel = find_the_depth(parent_node)
+
+    1 + depth_travel
   end
 
 
@@ -356,13 +375,14 @@ c = [1,2,3,4,5,6,7]
 random_array  = (Array.new(15) { rand(1..100) })
 d = [1,2,3,4,5]
 simple_test = [1,2,3]
-b = Tree.new(simple_test)
+b = Tree.new(c)
 
 b.insert(432432)
 # b.insert(4324322)
 # b.insert(43243223)
 
 b.pretty_print
+p b.depth(432432)
 # p b.level_order_iteration 
 # p b.level_order_recursion 
 # 
@@ -370,7 +390,8 @@ b.pretty_print
 # p b.inorder
 # p b.postorder
 
-p b.height(3)
+# p b.height(3)
+
 # b.level_order_recursion { |value| puts value}
 # b.insert(15)
 # b.insert(534)
